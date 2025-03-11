@@ -7,12 +7,14 @@
     - '{{ ansible_os_family }}.yml'
 
 - name: Ensure keepalived and its dependencies are installed.
+  become: true
   ansible.builtin.package:
     name: "{{ keepalived_packages }}"
     state: present
   when: keepalived_install | bool
 
 - name: Ensure keepalived command line arguments are defined.
+  become: true
   ansible.builtin.template:
     src: keepalived.default
     dest: /etc/default/keepalived
@@ -20,6 +22,7 @@
   notify: Restart keepalived
 
 - name: Ensure keepalived.conf is installed.
+  become: true
   ansible.builtin.template:
     src: keepalived.conf
     dest: /etc/keepalived/keepalived.conf
@@ -27,6 +30,7 @@
   notify: Restart keepalived
 
 - name: Ensure keepalived is started.
+  become: true
   ansible.builtin.service:
     name: keepalived
     state: started
