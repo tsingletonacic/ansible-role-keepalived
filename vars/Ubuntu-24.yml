@@ -1,0 +1,5 @@
+---
+__keepalived_packages:
+  - keepalived
+  - libipset13
+
