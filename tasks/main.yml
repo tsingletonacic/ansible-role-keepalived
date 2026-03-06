@@ -27,6 +27,7 @@
   notify: Restart keepalived
 
 - name: Ensure keepalived is started.
+  when: not ansible_check_mode
   ansible.builtin.service:
     name: keepalived
     state: started
