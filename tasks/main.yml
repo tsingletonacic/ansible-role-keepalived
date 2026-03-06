@@ -17,18 +17,26 @@
     src: keepalived.default
     dest: /etc/default/keepalived
     mode: "0644"
-  notify: Restart keepalived
+  register: keepalived_default_config
 
 - name: Ensure keepalived.conf is installed.
   ansible.builtin.template:
     src: keepalived.conf
     dest: /etc/keepalived/keepalived.conf
     mode: "0644"
-  notify: Restart keepalived
+  register: keepalived_conf
+
+- name: Restart keepalived if configuration changed.
+  ansible.builtin.service:
+    name: keepalived
+    state: restarted
+  when:
+    - not ansible_check_mode
+    - keepalived_default_config.changed or keepalived_conf.changed
 
 - name: Ensure keepalived is started.
-  when: not ansible_check_mode
   ansible.builtin.service:
     name: keepalived
     state: started
     enabled: true
+  when: not ansible_check_mode
